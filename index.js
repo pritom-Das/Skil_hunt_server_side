@@ -26,13 +26,6 @@ const verifyFirebaseToken = async (req, res, next) => {
       .status(401)
       .send({ message: "Unauthorized access who are you you" });
   }
-  const token = req.headers.authorization.split(" ")[1];
-  console.log(token);
-  if (!token) {
-    return res
-      .status(401)
-      .send({ message: "Unauthorized access who are you bitch" });
-  }
 
   try {
     const decoded = await admin.auth().verifyIdToken(token);
