@@ -18,31 +18,31 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// const verifyFirebaseToken = async (req, res, next) => {
-//   const authorized = req.headers.authorization;
-//   // console.log(authorized);
-//   if (!authorized) {
-//     return res
-//       .status(401)
-//       .send({ message: "Unauthorized access who are you you" });
-//   }
-//   const token = req.headers.authorization.split(" ")[1];
-//   console.log(token);
-//   if (!token) {
-//     return res
-//       .status(401)
-//       .send({ message: "Unauthorized access who are you bitch" });
-//   }
+const verifyFirebaseToken = async (req, res, next) => {
+  const authorized = req.headers.authorization;
+  // console.log(authorized);
+  if (!authorized) {
+    return res
+      .status(401)
+      .send({ message: "Unauthorized access who are you you" });
+  }
+  const token = req.headers.authorization.split(" ")[1];
+  console.log(token);
+  if (!token) {
+    return res
+      .status(401)
+      .send({ message: "Unauthorized access who are you bitch" });
+  }
 
-//   try {
-//     const decoded = await admin.auth().verifyIdToken(token);
-//     console.log("Decoded token", decoded);
-//     req.token_email = decoded.email;
-//     next();
-//   } catch {
-//     return res.send({ message: "Error code 20" });
-//   }
-// };
+  // try {
+  //   const decoded = await admin.auth().verifyIdToken(token);
+  //   console.log("Decoded token", decoded);
+  //   req.token_email = decoded.email;
+  //   next();
+  // } catch {
+  //   return res.send({ message: "Error code 20" });
+  // }
+};
 
 // Databse connection
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
