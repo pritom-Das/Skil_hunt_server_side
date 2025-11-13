@@ -34,14 +34,14 @@ const verifyFirebaseToken = async (req, res, next) => {
       .send({ message: "Unauthorized access who are you bitch" });
   }
 
-  // try {
-  //   const decoded = await admin.auth().verifyIdToken(token);
-  //   console.log("Decoded token", decoded);
-  //   req.token_email = decoded.email;
-  //   next();
-  // } catch {
-  //   return res.send({ message: "Error code 20" });
-  // }
+  try {
+    const decoded = await admin.auth().verifyIdToken(token);
+    console.log("Decoded token", decoded);
+    req.token_email = decoded.email;
+    next();
+  } catch {
+    return res.send({ message: "Error code 20" });
+  }
 };
 
 // Databse connection
@@ -89,16 +89,6 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await jobsCollection.findOne(query);
       res.send(result);
-    });
-    app.delete("/jobs/:id", verifyFirebaseToken, async (req, res) => {
-      try {
-        const id = req.params.id;
-        const query = { _id: new ObjectId(id) };
-        const result = await jobsCollection.deleteOne(query);
-        res.send(result);
-      } catch (err) {
-        res.status(500).send({ message: "Failed to delete job", err });
-      }
     });
 
     app.patch("/jobs/:id", verifyFirebaseToken, async (req, res) => {
