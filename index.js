@@ -12,7 +12,13 @@ app.get("/", (req, res) => {
   res.send("Freelance Market place backed server is on now ");
 });
 
-const serviceAccount = require("./sillhunt_firebase_sdk.json");
+// const serviceAccount = require("./sillhunt_firebase_sdk.json");
+
+const decoded = Buffer.from(
+  process.env.FIREBASE_SERVICE_KEY,
+  "base64"
+).toString("utf8");
+const serviceAccount = JSON.parse(decoded);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -89,6 +95,16 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await jobsCollection.findOne(query);
       res.send(result);
+    });
+    app.delete("/jobs/:id", verifyFirebaseToken, async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await jobsCollection.deleteOne(query);
+        res.send(result);
+      } catch (err) {
+        res.status(500).send({ message: "Failed to delete job", err });
+      }
     });
 
     app.patch("/jobs/:id", verifyFirebaseToken, async (req, res) => {
@@ -227,7 +243,7 @@ async function run() {
       res.send(result);
     });
 
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
